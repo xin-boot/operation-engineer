@@ -58,4 +58,7 @@ git remote -v
 #### 开发机器
 通过ssh协议将数据从git仓库拉去到本地PC
 ```
+git clone ssh://git@******/data/operation-engineer/operation-engineer.git
 ```
+在本地添加文件后，进行提交推送，验证是否功能正常
+#### 服务端添加钩子，实现数据自动推送git仓库后，自动推送到github远程仓库
