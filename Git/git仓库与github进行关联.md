@@ -62,3 +62,36 @@ git clone ssh://git@******/data/operation-engineer/operation-engineer.git
 ```
 在本地添加文件后，进行提交推送，验证是否功能正常
 #### 服务端添加钩子，实现数据自动推送git仓库后，自动推送到github远程仓库
+- update钩子
+```
+#!/bin/bash
+# 只做验证，不同步
+refname="$1"
+
+allowed_branches="^refs/heads/(master|main|develop|feature/.*)$"
+
+if [[ ! $refname =~ $allowed_branches ]]; then
+    echo "❌ 不允许推送到分支: $refname"
+    exit 1
+fi
+
+exit 0
+```
+- post-receive钩子
+```
+[git@develloper hooks]$ cat post-receive 
+#!/bin/bash
+# 在更新后同步
+while read oldrev newrev refname
+do
+    branch_name=${refname#refs/heads/}
+    
+    echo "正在同步分支 '$branch_name' 到 GitHub..."
+    if git push origin "$branch_name"; then
+        echo "✅ 同步完成"
+    else
+        echo "⚠️ 同步失败，但本地更新已接受"
+        # 不返回错误，因为本地更新已成功
+    fi
+done
+```
