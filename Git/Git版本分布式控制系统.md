@@ -48,7 +48,7 @@ Git官网站点
 3.  将暂存区域的文件快照提交到Git仓库
     流程图如下：
 
-![Git的三种工作状态.jpg](https://note.youdao.com/yws/res/15911/WEBRESOURCE22a19fa1ff4e59e85a8e85e041847a58)
+![Git的三种工作状态.jpg](images/WEBRESOURCE22a19fa1ff4e59e85a8e85e041847a58Git的三种工作状态.jpg)
 
 ##### 安装Git服务程序
 
@@ -219,7 +219,7 @@ Git只能追踪类似于txt文件、网页、程序源码等文本文件的内�
     将文件添加到暂存区
     [root@serverA ServerA]# git add test.page 
 
-![Git文件提交流程.jpg](https://note.youdao.com/yws/res/15985/WEBRESOURCEeb62a799d8175db67827a4b33bf05f5c)
+![Git文件提交流程.jpg](images/WEBRESOURCEeb62a799d8175db67827a4b33bf05f5cGit文件提交流程.jpg)
 
 添加到暂存区后再次修改文件的内容：
 
@@ -232,7 +232,7 @@ Git只能追踪类似于txt文件、网页、程序源码等文本文件的内�
      1 file changed, 1 insertion(+)
      create mode 100644 test.page
 
-![将文件提交到Git版本仓库.jpg](https://note.youdao.com/yws/res/15998/WEBRESOURCE84786da06f2944b2320b44803cd0c874)
+![将文件提交到Git版本仓库.jpg](images/WEBRESOURCE84786da06f2944b2320b44803cd0c874将文件提交到Git版本仓库.jpg)
 查看当前工作目录的状态
 \[root\@serverA ServerA]# git status
 On branch master
@@ -247,7 +247,7 @@ modified test.page 修改
 
 演示示例
 3.1 查看当前工作目录状态，	modified:   test.page （已修改，未增加到缓存区）
-![1672730054073.png](https://note.youdao.com/yws/res/24333/WEBRESOURCEc8f50c309ef6926f19ace7953836a6dd)
+![1672730054073.png](images/WEBRESOURCEc8f50c309ef6926f19ace7953836a6dd1672730054073.png)
 
     [root@serverA ServerA]# git status
     On branch master
@@ -257,15 +257,15 @@ modified test.page 修改
     	modified:   test.page
 
 3.2 将文件提交到缓存区(modified变成绿色)
-![1672730201810.png](https://note.youdao.com/yws/res/24329/WEBRESOURCE20cd312d640aa869d64b688bf91c6ec4)
+![1672730201810.png](images/WEBRESOURCE20cd312d640aa869d64b688bf91c6ec41672730201810.png)
 3.3 将缓存区中文件的快照提交到git数据库
 \[root\@serverA ServerA]# git commit -m "第二次修改" test.page
 3.4 再次查看工作目录状态
-![1672730995732.png](https://note.youdao.com/yws/res/24340/WEBRESOURCE35615355cd5807cbb1a037217fadc40e)
+![1672730995732.png](images/WEBRESOURCE35615355cd5807cbb1a037217fadc40e1672730995732.png)
 查看当前文件内容与Git版本数据库的区别:
 语法 git diff 文件名
 \[root\@serverA ServerA]# git diff test.page
-![1672731898080.png](https://note.youdao.com/yws/res/24338/WEBRESOURCEd0bd2453d014c46b765e14cbfc1758c8)
+![1672731898080.png](images/WEBRESOURCEd0bd2453d014c46b765e14cbfc1758c81672731898080.png)
 现在在把文件提交到正式git数据库
 
     [root@serverA ServerA]# git add test.page 
@@ -331,7 +331,7 @@ modified test.page 修改
 \[master 183e02c] This is Modified again
 Date: Tue Jan 3 16:50:16 2023 +0800
 1 file changed, 1 insertion(+), 1 deletion(-)
-![1672736157316.jpg](https://note.youdao.com/yws/res/24335/WEBRESOURCE986c61aa2890e8cc164b1452513c69fd)
+![1672736157316.jpg](images/WEBRESOURCE986c61aa2890e8cc164b1452513c69fd1672736157316.jpg)
 ##### 提交时常见问题
 Q：输入git add readme.txt，得到错误：fatal: not a git repository (or any of the parent directories)。
 
@@ -381,7 +381,7 @@ git rm [选项] 参数（文件名）删除Git仓库的文件
     Untracked files:
     (use "git add \<file>..." to include in what will be committed)
     databases
-    ![1672740608024.png](https://note.youdao.com/yws/res/24339/WEBRESOURCE5a9568903448124c04e3e7608ad04099)
+    ![1672740608024.png](images/WEBRESOURCE5a9568903448124c04e3e7608ad040991672740608024.png)
 
 ##### 删除Git缓存区和工作目录下的文件
 
@@ -420,9 +420,9 @@ Git不像其他版本控制系统那样跟踪文件的移动操作，如果要�
     Changes to be committed:
     (use "git restore --staged &lt;file&gt;..." to unstage)
     renamed:    test.page -> testpage.page
-    ![1672799040041.jpg](https://note.youdao.com/yws/res/24328/WEBRESOURCE09d00f63706a9c8449196ca0617efdcd)
+    ![1672799040041.jpg](images/WEBRESOURCE09d00f63706a9c8449196ca0617efdcd1672799040041.jpg)
     将文件提交到Git数据库，再次查看目录下的工作名称
-    ![1672799165845.png](https://note.youdao.com/yws/res/24337/WEBRESOURCE2bccb30bc3ceaa65a361e32e5891da68)
+    ![1672799165845.png](images/WEBRESOURCE2bccb30bc3ceaa65a361e32e5891da681672799165845.png)
     \#原文件名称一起改变
 *   改名操作2（先将工作目录下的数据文件改变名称，在删除原有Git版本仓库内的文件快照:）
 
@@ -728,9 +728,9 @@ checkou规则是如果暂存区中有该文件，则直接从暂存区恢复，�
 #### 管理分支结构
 
 分支即是平行空间，假设你在为某个手机系统研发拍照功能，代码已经完成了80%，但如果将这不完整的代码直接提交到git仓库中，又有可能影响到其他人的工作，此时我们便可以在该软件的项目之上创建一个名叫“拍照功能”的分支，这种分支只会属于你自己，而其他人看不到，等代码编写完成后再与原来的项目主分支合并下即可，这样即能保证代码不丢失，又不影响其他人的工作。
-![Git团队合作流程图.png](https://note.youdao.com/yws/res/24334/WEBRESOURCEba05903e67bc9667169edbafe34cac3c)
+![Git团队合作流程图.png](images/WEBRESOURCEba05903e67bc9667169edbafe34cac3cGit团队合作流程图.png)
 一般在实际的项目开发中，我们要尽量保证master分支是非常稳定的，仅用于发布新版本，平时不要随便直接修改里面的数据文件，而工作的时候则可以新建不同的工作分支，等到工作完成后在合并到master分支上面，所以团队的合作分支看起来会像上面图那样。
-![Git分支示意图.png](https://note.youdao.com/yws/res/24330/WEBRESOURCEe5a128c9ddd750c7d956596356b305a8)
+![Git分支示意图.png](images/WEBRESOURCEe5a128c9ddd750c7d956596356b305a8Git分支示意图.png)
 另外如前面所讲，git会将每次的提交操作串成一个时间线，而在前面的实验中实际都是在对master分支进行操作，Git会在创建分支后默认创建一个叫做Photograph的指针，所以我们还需要再将HEAD指针切换到“Photograph”的位置才正式使用上了新分支哦，这么说起来可能比较抽象，赶紧学习下面的实验吧。
 ==创建分支==
 格式\:git branch 分支名称
@@ -776,7 +776,7 @@ checkou规则是如果暂存区中有该文件，则直接从暂存区恢复，�
 #### 合并分支
 
 现在，我们想把测试分支的工作成果合并到master分支上了，则可以使用"git merge"命令来将指定的的分支与当前分支合并：
-![合并分支.png](https://note.youdao.com/yws/res/24332/WEBRESOURCE41d3c0e8397a3bca94bc70460ad41665)
+![合并分支.png](images/WEBRESOURCE41d3c0e8397a3bca94bc70460ad41665合并分支.png)
 在本地master分支下，合并测试分支
 语法：git merge \[合并的分支名称]
 
@@ -808,7 +808,7 @@ checkou规则是如果暂存区中有该文件，则直接从暂存区恢复，�
 ##### 内容冲突
 
 但是Git并不能每次都为我们自动的合并分支，当遇到了内容冲突比较复杂的情况，则必须手工将差异内容处理掉，比如这样的情况：
-![冲突分支合并.png](https://note.youdao.com/yws/res/24331/WEBRESOURCEa12c11bfb42b8a01f1773dc431de6d7d)
+![冲突分支合并.png](images/WEBRESOURCEa12c11bfb42b8a01f1773dc431de6d7d冲突分支合并.png)
 创建新的分支提交
 
     #创建新的分支并切换到新分支
@@ -839,7 +839,7 @@ checkou规则是如果暂存区中有该文件，则直接从暂存区恢复，�
      1 file changed, 1 insertion(+)
 
 经过提交，mast分支与"第二次冲突"分支各自都分别有新的提交，变成这样了：
-![1673852695775.png](https://note.youdao.com/yws/res/24336/WEBRESOURCEa78b7762eebb5fd8ae39fa8a97a10e92)
+![1673852695775.png](images/WEBRESOURCEa78b7762eebb5fd8ae39fa8a97a10e921673852695775.png)
 这种情况下，Git无法执行“快速合并”，只能试图把各自的修改合并起来，但这种合并就可能会有冲突,果然Git文件存在冲突，必须手动解决冲突后再提交,git status也可以告诉我们冲突的文件：
 ```
 On branch master
