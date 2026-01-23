@@ -918,6 +918,136 @@ git pull origin master
 ```
 git push origin master
 ```
-信息
+### Git 本地钩子
+Git 钩子（Git Hooks）是 Git 版本控制系统中的一种机制，允许在特定事件（如提交、推送、合并等）发生时自动触发自定义脚本，用于自动化工作流程或执行检查。
+Git 钩子最常见的使用场景包括推行提交规范，根据仓库状态改变项目环境，和接入持续集成工作流。但是，因为脚本可以完全定制，你可以用 Git 钩子来自动化或者优化你开发工作流中任意部分。
+#### 核心概念：
+- 位置​：
+钩子脚本存储在 Git 仓库的 .git/hooks/目录中，默认包含示例脚本（以 .sample结尾）。
+触发时机​:分为客户端钩子（本地事件）和服务端钩子（远程仓库事件）：
+#### 创建git钩子示例与用途
+| 钩子名称 | 触发时机 | 典型用途|
+| --- | --- | --- |
+| pre-commit | 执行 git commit前 | 检查代码风格、运行测试 |
+| commit-msg | 提交消息保存前 | 校验提交信息的格式 |
+| post-checkout | 切换分支后 | 自动安装依赖或更新配置 |
+| pre-push | 执行 git push前 | 推送前运行完整测试套件 |
+| pre-receive | 服务端接收推送前 | 验证提交的权限或内容 |
+|
+#### 钩子的脚本语言
+内置的脚本大多是 shell和 PERL 语言的，但你可以使用任何脚本语言，只要它们最后能编译到可执行文件。每次脚本中的 #!/bin/sh 定义了你的文件将被如何解释。比如，使用其他语言时你只需要将 path 改为你的解释器的路径即可。
+#### 钩子的作用域
+对于任何 Git 仓库来说钩子都是本地的，而且它不会随着 git clone 一起复制到新的仓库。而且，因为钩子是本地的，任何能接触得到仓库的人都可以修改。
+在开发团队中维护钩子是比较复杂的，因为 .git/hooks 目录不随你的项目一起拷贝，也不受版本控制影响。一个简单的解决办法是把你的钩子存在项目的实际目录中（在 .git 外）。这样你就可以像其他文件一样进行版本控制。为了安装钩子，你可以在 .git/hooks 中创建一个符号链接，或者简单地在更新后把它们复制到 .git/hooks 目录下。
+#### - 客户端钩子:
+本地钩子只影响它们所在的仓库。当你在读这一节的时候，记住开发者可以修改他们本地的钩子，所以不要用它们来推行强制的提交规范。不过，它们确实可以让开发者更易于接受这些规范
+例如 pre-commit（提交前）、post-merge（合并后）。
+- pre-commit
+- prepare-commit-msg
+- commit-msg
+- post-commit
+- post-checkout
+- pre-rebase
+
+前四个钩子让你介入完整的提交生命周期，后两个允许你执行一些额外的操作,，分别为 git checkout 和 git rebase 的安全检查。
+所有带pre- 的钩子允许你修改即将发生的操作，而带post- 的钩子只能用于通知。
+#### 服务端钩子：
+例如 pre-receive（推送前校验代码）、update()、post-receive(提交后进行信息推送)。
+
+```
+这些钩子都允许你对 git push 的不同阶段做出响应。
+服务端钩子的输出会传送到客户端的控制台中，所以给开发者发送信息是很容易的。但你要记住这些脚本在结束完之前都不会返回控制台的控制权，所以你要小心那些长时间运行的操作。
+```
+![服务端钩子](./images/服务端钩子.png)
+##### pre-receive钩子
+pre-receive钩子在有人用 git push向仓库推送代码时被执行。它只存在于远端仓库中，而不是原来的仓库中。
+- 接收标准输入:格式：<旧SHA> <新SHA> <引用路径>
+<old-value> <new-value> <ref-name>
+- 以非零退出码可拒绝整个推送
+- 只执行一次，无论推送了多少个分支/标签
+脚本示例
+```
+#!/bin/bash
+while read oldrev newrev refname; do
+    if [[ $oldrev =~ ^0+$ ]]; then
+        # 新分支，允许
+        continue
+    elif [[ $newrev =~ ^0+$ ]]; then
+        echo "错误：不允许删除分支 $refname"
+        exit 1
+    elif git merge-base --is-ancestor "$oldrev" "$newrev"; then
+        # 快进推送，允许
+        continue
+    else
+        echo "错误：不允许强制推送 $refname"
+        exit 1
+    fi
+done
+```
+##### update钩子
+- 对每个被更新的引用执行一次
+- 接收3个参数：<引用名> <旧SHA> <新SHA>
+- 可针对不同分支/标签设置不同规则
+```
+#!/bin/bash
+# update 钩子参数
+refname="$1"  # 如 refs/heads/main
+oldrev="$2"   # 旧提交哈希
+newrev="$3"   # 新提交哈希
+
+# 示例：保护特定分支
+if [ "$refname" = "refs/heads/main" ]; then
+    # 检查提交者是否是授权用户
+    author=$(git log -1 --format="%ae" $newrev 2>/dev/null)
+    if [ "$author" != "admin@company.com" ]; then
+        echo "错误：只有管理员可推送到 main 分支"
+        exit 1
+    fi
+fi
+
+# 示例：检查标签格式
+if [[ "$refname" =~ ^refs/tags/ ]]; then
+    tag_name=${refname#refs/tags/}
+    if [[ ! "$tag_name" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "错误：标签必须符合 vX.Y.Z 格式"
+        exit 1
+    fi
+fi
+```
+##### post-receive钩子
+- 提交后进行信息推送
+- 在所有引用成功更新后执行
+- 退出码不影响推送结果
+
+```
+    #!/bin/bash
+    # 示例：触发持续集成、发送通知
+    while read oldrev newrev refname; do
+        branch=${refname#refs/heads/}
+        
+        # 1. 发送邮件通知
+        git log --pretty=format:"%s" "$oldrev..$newrev" | \
+        mail -s "代码更新: $branch" team@company.com
+        
+        # 2. 触发 CI/CD
+        if [ "$branch" = "main" ]; then
+            curl -X POST "https://ci.example.com/build/main"
+        fi
+        
+        # 3. 自动部署到测试环境
+        if [ "$branch" = "develop" ]; then
+            cd /var/www/test && git pull origin develop
+        fi
+    done
+```
+使用场景：
+- 触发持续集成（Jenkins、GitLab CI 等）
+- 自动部署到测试/生产环境
+- 发送通知（邮件、Slack、钉钉）
+- 更新问题跟踪系统
+- 生成文档
+- 同步到镜像仓库
+
+
 
 
