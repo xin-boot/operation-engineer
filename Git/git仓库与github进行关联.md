@@ -90,7 +90,7 @@ do
     if git push origin "$branch_name"; then
         echo "✅ 同步完成"
     else
-        echo "⚠️ 同步失败，但本地更新已接受"
+        echo "⚠️ 同步失败，但远程仓库更新已接受,githun更新失败"
         # 不返回错误，因为本地更新已成功
     fi
 done
